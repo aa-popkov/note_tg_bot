@@ -12,8 +12,8 @@ class SendContact(NamedTuple):
 
 
 class MainMenu(NamedTuple):
-    account: str = "💰 Бюджет"
-    gym: str = "💪 GYM"
+    #account: str = "💰 Бюджет"
+    #gym: str = "💪 GYM"
     notes: str = "📝 Заметки"
     cats: str = "🐈 Посмотреть котиков"
 
