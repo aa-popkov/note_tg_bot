@@ -25,3 +25,8 @@ class NotesMenu(NamedTuple):
 
 class NoteEdit(NamedTuple):
     cancel: str = "❌ Отмена"
+
+
+class CatsMenu(NamedTuple):
+    give_cat: str = "🐱 Дай котика"
+    back_to_menu: str = "🏠 Вернуться в главное меню"

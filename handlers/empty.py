@@ -1,6 +1,6 @@
 from aiogram import Router
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message, ReplyKeyboardRemove, CallbackQuery
+from aiogram.types import Message, CallbackQuery
 
 router = Router(name=__name__)
 
@@ -9,7 +9,6 @@ router = Router(name=__name__)
 async def empty_msg(msg: Message, state: FSMContext):
     await msg.reply(
         "Похоже, что такие сообщения еще не обрабатываются...\n",
-        reply_markup=ReplyKeyboardRemove(),
     )
 
 

@@ -11,6 +11,7 @@ class MainState(StatesGroup):
     main = State()
     menu = State()
     notes = State()
+    cats = State()
 
 
 class NotesState(StatesGroup):

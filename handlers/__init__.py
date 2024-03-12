@@ -4,12 +4,14 @@ from .empty import router as empty_router
 from .start import router as start_router
 from .menu import router as menu_router
 from .notes import router as notes_router
+from .cats import router as cats_router
 
 router = Router(name=__name__)
 router.include_routers(
     start_router,
     menu_router,
     notes_router,
+    cats_router,
 )
 
 # ! Must be last
