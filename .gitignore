@@ -1,5 +1,4 @@
 /docker/data/
-/alembic/versions/
 .env
 .venv
 .DS_Store
