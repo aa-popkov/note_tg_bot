@@ -9,7 +9,8 @@ async def on_startup():
     commands = [
         BotCommand(command="/start", description="🏁 Старт"),
         BotCommand(command="/menu", description="🏠 Меню"),
-        BotCommand(command="/budget", description="💰 Бюджет"),
+        BotCommand(command="/notes", description="📝 Простые заметки")
+        # BotCommand(command="/budget", description="💰 Бюджет"),
     ]
     await bot.set_my_commands(commands)
     for admin_id in config.TG_ADMIN_CHAT_ID:
