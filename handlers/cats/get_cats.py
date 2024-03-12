@@ -25,7 +25,10 @@ router.message.middleware(LongTimeMiddleware())
 async def get_cats(message: Message, state: FSMContext):
     await state.set_state(states.MainState.wait_operation)
     try:
-        async with aiohttp.ClientSession() as session:
+        connector = aiohttp.TCPConnector(
+            verify_ssl=False, use_dns_cache=False
+        )  # https://github.com/aio-libs/aiohttp/issues/2522
+        async with aiohttp.ClientSession(connector=connector) as session:
             async with session.get(
                 url=f"https://api.thecatapi.com/v1/images/search",
                 headers={
