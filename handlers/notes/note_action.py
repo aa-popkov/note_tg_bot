@@ -27,9 +27,27 @@ async def note_action_delete_callback(callback: CallbackQuery, state: FSMContext
         max_page=(notes_count // 5) + 1,
     )
     notes = await UserNote.get_all_notes(str(callback.from_user.id))
-    await callback.message.edit_text(
-        text=f"Заметка удалена",
-        reply_markup=get_my_notes_kb(notes, callback_counter),
+    try:
+        await callback.message.delete()
+    except Exception as e:
+        if len(notes) > 0:
+            await callback.message.edit_text(
+                text=f"Заметка удалена",
+                reply_markup=get_my_notes_kb(notes, callback_counter),
+            )
+        else:
+            await callback.message.edit_text(
+                text="У тебя больше не осталось заметок\n"
+                     "\n"
+                     "📝 В меню заметок: /notes\n"
+                     "🏠 В главное меню: /menu",
+                reply_markup=None
+            )
+        return
+    await callback.bot.send_message(
+        chat_id=callback.from_user.id,
+        text="Заметка удалена",
+        reply_markup=get_main_notes_kb()
     )
 
 
