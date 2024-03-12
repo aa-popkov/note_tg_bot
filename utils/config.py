@@ -14,6 +14,8 @@ class Config(BaseSettings):
 
     REDIS_PASSWORD: str
 
+    CAT_API_KEY: str
+
     @property
     def connection_string_asyncpg(self):
         return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_DATABASE}"

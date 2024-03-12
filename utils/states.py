@@ -12,6 +12,7 @@ class MainState(StatesGroup):
     menu = State()
     notes = State()
     cats = State()
+    wait_operation = State()
 
 
 class NotesState(StatesGroup):
