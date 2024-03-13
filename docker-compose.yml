@@ -10,8 +10,8 @@ services:
       POSTGRES_PASSWORD: "${DB_PASS}"
       PGDATA: /var/lib/postgresql/data/db-files/
     volumes:
-      - ./docker/postgresql.conf:/etc/postgresql.conf
-      - ./docker/data/db:/var/lib/postgresql/data
+      - ./config/postgresql.conf:/etc/postgresql.conf
+      - ./data/db:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     healthcheck:
@@ -30,8 +30,8 @@ services:
     container_name: cache-redis
     image: redis/redis-stack:7.2.0-v4
     volumes:
-      - ./docker/data/redis:/data
-      - ./docker/redis.conf:/redis-stack.conf
+      - ./data/redis:/data
+      - ./config/redis.conf:/redis-stack.conf
     environment:
       - REDIS_ARGS=--requirepass ${REDIS_PASSWORD}
     ports:

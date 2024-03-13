@@ -1,8 +1,5 @@
-import asyncio
-
 import aiohttp
 from aiogram import Router, F
-from aiogram.enums import ChatAction
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, URLInputFile
 from aiogram.filters import StateFilter
@@ -10,7 +7,7 @@ from aiogram.filters import StateFilter
 from utils import states
 from utils.kb_data import CatsMenu
 from handlers.menu.main_menu import main_menu
-from utils.config import config
+from config.config import config
 from utils.middlewares import LongTimeMiddleware
 
 router = Router(name=__name__)

@@ -1,6 +1,7 @@
 import asyncio
 import logging
 import sys
+from logging.handlers import RotatingFileHandler
 
 from utils.bot import dp, bot
 from utils.startup import on_startup
@@ -16,5 +17,8 @@ async def main() -> None:
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.DEBUG, stream=sys.stdout)
+    logging.basicConfig(
+        handlers=[RotatingFileHandler("./data/logs/bot.log", maxBytes=10*1024, backupCount=5)],
+        level=logging.DEBUG,
+    )
     asyncio.run(main())

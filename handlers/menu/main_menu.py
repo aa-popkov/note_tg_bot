@@ -12,7 +12,7 @@ router = Router(name=__name__)
 @router.message(Command("menu"))
 @router.message(StateFilter(states.MainState.main))
 async def main_menu(msg: Message, state: FSMContext):
-    await msg.reply(
+    await msg.answer(
         text="🏠Главное меню\n" "Для навигации используйте кнопки внизу",
         reply_markup=get_start_registration_kb(),
     )
