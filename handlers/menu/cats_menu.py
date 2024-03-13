@@ -12,7 +12,7 @@ router = Router(name=__name__)
 
 @router.message(StateFilter(states.MainState.menu), F.text == MainMenu().cats)
 async def cats_menu(msg: Message, state: FSMContext):
-    await msg.reply(
+    await msg.answer(
         text="Тут можно посмотреть милых(и не только) котиков\n\n"
         "Ты можешь добавить подпись на картинку.\n"
         "Для этого, вместо кнопки на клавиатуре, \n"

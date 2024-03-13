@@ -1,6 +1,6 @@
 from aiogram.types import BotCommand
 
-from utils.config import config
+from config.config import config
 from .bot import bot
 
 

@@ -1,6 +1,7 @@
 import asyncio
 import logging
-import sys
+from pathlib import Path
+from logging.handlers import RotatingFileHandler
 
 from utils.bot import dp, bot
 from utils.startup import on_startup
@@ -16,5 +17,11 @@ async def main() -> None:
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.DEBUG, stream=sys.stdout)
+    log_path = Path(__file__).parent.resolve() / "data" / "logs"
+    if not log_path.exists():
+        log_path.mkdir(parents=True)
+    logging.basicConfig(
+        handlers=[RotatingFileHandler("./data/logs/bot.log", maxBytes=10*1024, backupCount=5)],
+        level=logging.DEBUG,
+    )
     asyncio.run(main())

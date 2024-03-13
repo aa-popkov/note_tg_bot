@@ -6,8 +6,9 @@ from aiogram.types import Message, ReplyKeyboardRemove
 
 from keyboards.start import get_send_contact_kb
 from models import User
-from utils import states, config
-
+from utils import states
+from config import config
+from handlers.menu.main_menu import main_menu
 
 router = Router(name=__name__)
 
@@ -31,6 +32,7 @@ async def get_contact(msg: Message, state: FSMContext):
             reply_markup=ReplyKeyboardRemove(),
         )
         await state.set_state(states.MainState.main)
+        await main_menu(msg, state)
         return
 
     user = User(
