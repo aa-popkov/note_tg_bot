@@ -8,6 +8,8 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 from alembic import context
 
 from models.base import Base
+from models.user import User
+from models.user_notes import UserNote
 from config.config import config as app_config
 
 # this is the Alembic Config object, which provides
@@ -29,7 +31,14 @@ target_metadata = Base.metadata
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
-config.set_main_option("sqlalchemy.url", app_config.connection_string_asyncpg)
+config.set_main_option("sqlalchemy.url", app_config.connection_string_aiosqlite)
+
+
+def include_object(object, name, type_, reflected, compare_to):
+    if type_ == "table" and name == "apscheduler_jobs":
+        return False
+    else:
+        return True
 
 
 def run_migrations_offline() -> None:
@@ -50,6 +59,7 @@ def run_migrations_offline() -> None:
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
+        include_object=include_object,
     )
 
     with context.begin_transaction():
@@ -61,6 +71,7 @@ def do_run_migrations(connection: Connection) -> None:
         connection=connection,
         target_metadata=target_metadata,
         compare_server_default=True,
+        include_object=include_object,
     )
 
     with context.begin_transaction():
