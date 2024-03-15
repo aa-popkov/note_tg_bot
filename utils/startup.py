@@ -9,7 +9,8 @@ async def on_startup():
     commands = [
         BotCommand(command="/start", description="🏁 Старт"),
         BotCommand(command="/menu", description="🏠 Меню"),
-        BotCommand(command="/notes", description="📝 Простые заметки")
+        BotCommand(command="/notes", description="📝 Простые заметки"),
+        BotCommand(command="/hbd", description="🥳 Дни рождения"),
         # BotCommand(command="/budget", description="💰 Бюджет"),
     ]
     await bot.set_my_commands(commands)

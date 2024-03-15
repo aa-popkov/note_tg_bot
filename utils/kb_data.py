@@ -12,10 +12,11 @@ class SendContact(NamedTuple):
 
 
 class MainMenu(NamedTuple):
-    #account: str = "💰 Бюджет"
-    #gym: str = "💪 GYM"
+    # account: str = "💰 Бюджет"
+    # gym: str = "💪 GYM"
     notes: str = "📝 Заметки"
     cats: str = "🐈 Посмотреть котиков"
+    hbd: str = "🥳 Дни рождения"
 
 
 class NotesMenu(NamedTuple):
@@ -29,4 +30,12 @@ class NoteEdit(NamedTuple):
 
 class CatsMenu(NamedTuple):
     give_cat: str = "🐱 Дай котика"
+    back_to_menu: str = "🏠 Вернуться в главное меню"
+
+
+class HbdMenu(NamedTuple):
+    add_hbd: str = "➕ Добавить новый"
+    show_in_msg: str = "💬 Посмотреть в сообщении"
+    show_html: str = "📊 Посмотреть файлом"
+    del_hdb: str = "❌ Удалить"
     back_to_menu: str = "🏠 Вернуться в главное меню"
