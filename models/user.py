@@ -1,7 +1,7 @@
 from typing import Optional
 
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import select, insert
+from sqlalchemy import select
 
 from .base import Base
 from utils.database import async_session_factory
