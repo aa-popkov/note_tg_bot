@@ -23,6 +23,8 @@ if __name__ == "__main__":
     if not log_path.exists():
         log_path.mkdir(parents=True)
     logging.basicConfig(
+        format="{asctime} {filename} {levelname:8s} {message}",
+        style="{",
         handlers=[
             RotatingFileHandler(
                 "./data/logs/bot.log", maxBytes=10 * 1024, backupCount=5

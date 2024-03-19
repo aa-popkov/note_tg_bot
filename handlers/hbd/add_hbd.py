@@ -43,7 +43,7 @@ async def add_hbd_get_name(msg: Message, state: FSMContext):
 
 
 @router.message(StateFilter(states.HbdState.add_note), F.content_type != "text")
-async def add_hbd_get_non_text(msg: Message, state: FSMContext):
+async def add_hbd_get_non_text(msg: Message):
     await msg.reply(
         text="Это не текст!\n\n" "<b>Попробуй еще раз</b>",
     )
@@ -55,7 +55,7 @@ async def add_hbd_get_non_text(msg: Message, state: FSMContext):
     ),
     StateFilter(states.HbdState.add_note),
 )
-async def hbd_back_year_callback(callback: CallbackQuery, state: FSMContext):
+async def hbd_back_year_callback(callback: CallbackQuery):
     await callback.message.edit_reply_markup(
         reply_markup=get_hbd_year_calendar(
             CalendarCallback.unpack(callback.data).year - 8
@@ -70,7 +70,7 @@ async def hbd_back_year_callback(callback: CallbackQuery, state: FSMContext):
     ),
     StateFilter(states.HbdState.add_note),
 )
-async def hbd_forward_year_callback(callback: CallbackQuery, state: FSMContext):
+async def hbd_forward_year_callback(callback: CallbackQuery):
     await callback.message.edit_reply_markup(
         reply_markup=get_hbd_year_calendar(
             CalendarCallback.unpack(callback.data).year + 8
@@ -83,7 +83,7 @@ async def hbd_forward_year_callback(callback: CallbackQuery, state: FSMContext):
     CalendarCallback.filter(F.obj == CalendarObj.year),
     StateFilter(states.HbdState.add_note),
 )
-async def hbd_year_callback(callback: CallbackQuery, state: FSMContext):
+async def hbd_year_callback(callback: CallbackQuery):
     await callback.message.edit_reply_markup(
         reply_markup=get_hbd_month_calendar(CalendarCallback.unpack(callback.data))
     )
@@ -96,7 +96,7 @@ async def hbd_year_callback(callback: CallbackQuery, state: FSMContext):
     ),
     StateFilter(states.HbdState.add_note),
 )
-async def hbd_month_forward_callback(callback: CallbackQuery, state: FSMContext):
+async def hbd_month_forward_callback(callback: CallbackQuery):
     cb_data = CalendarCallback.unpack(callback.data)
     cb_data.year += 1
     await callback.message.edit_reply_markup(
@@ -111,7 +111,7 @@ async def hbd_month_forward_callback(callback: CallbackQuery, state: FSMContext)
     ),
     StateFilter(states.HbdState.add_note),
 )
-async def hbd_month_back_callback(callback: CallbackQuery, state: FSMContext):
+async def hbd_month_back_callback(callback: CallbackQuery):
     cb_data = CalendarCallback.unpack(callback.data)
     cb_data.year -= 1
     await callback.message.edit_reply_markup(
@@ -126,7 +126,7 @@ async def hbd_month_back_callback(callback: CallbackQuery, state: FSMContext):
     ),
     StateFilter(states.HbdState.add_note),
 )
-async def hbd_month_year_callback(callback: CallbackQuery, state: FSMContext):
+async def hbd_month_year_callback(callback: CallbackQuery):
     cb_data = CalendarCallback.unpack(callback.data)
     await callback.message.edit_reply_markup(
         reply_markup=get_hbd_year_calendar(cb_data.year)
@@ -140,7 +140,7 @@ async def hbd_month_year_callback(callback: CallbackQuery, state: FSMContext):
     ),
     StateFilter(states.HbdState.add_note),
 )
-async def hbd_month_callback(callback: CallbackQuery, state: FSMContext):
+async def hbd_month_callback(callback: CallbackQuery):
     cb_data = CalendarCallback.unpack(callback.data)
     await callback.message.edit_reply_markup(reply_markup=get_hbd_day_calendar(cb_data))
     await callback.answer("")
@@ -152,7 +152,7 @@ async def hbd_month_callback(callback: CallbackQuery, state: FSMContext):
     ),
     StateFilter(states.HbdState.add_note),
 )
-async def hbd_month_back_callback(callback: CallbackQuery, state: FSMContext):
+async def hbd_month_back_callback(callback: CallbackQuery):
     cb_data = CalendarCallback.unpack(callback.data)
     cb_data.month = cb_data.month - 1 if cb_data.month > 0 else 11
     cb_data.year = cb_data.year if cb_data.month > 0 else cb_data.year - 1
@@ -166,7 +166,7 @@ async def hbd_month_back_callback(callback: CallbackQuery, state: FSMContext):
     ),
     StateFilter(states.HbdState.add_note),
 )
-async def hbd_month_forward_callback(callback: CallbackQuery, state: FSMContext):
+async def hbd_month_forward_callback(callback: CallbackQuery):
     cb_data = CalendarCallback.unpack(callback.data)
     cb_data.month = cb_data.month + 1 if cb_data.month < 11 else 0
     cb_data.year = cb_data.year if cb_data.month < 11 else cb_data.year + 1
@@ -187,7 +187,7 @@ async def hbd_select_date_callback(callback: CallbackQuery, state: FSMContext):
     hbd_id = await UserHappyBirthday.add_hbd(UserHappyBirthday(
         person_name=hbd_name["hbd_name"],
         person_birthdate=hbd_date,
-        user_id=callback.message.from_user.id
+        user_id=str(callback.from_user.id)
     ))
 
     await callback.message.edit_text(
@@ -198,6 +198,7 @@ async def hbd_select_date_callback(callback: CallbackQuery, state: FSMContext):
         reply_markup=None,
     )
     await state.set_state(states.MainState.hbd)
+    await state.set_data({})
     await callback.bot.send_message(
         chat_id=callback.message.chat.id,
         text="Перевожу в меню Дней рождений",

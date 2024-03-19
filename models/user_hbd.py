@@ -1,7 +1,8 @@
 from datetime import datetime
+from typing import Optional, List
 
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import select, ForeignKey, String
+from sqlalchemy import select, ForeignKey, String, func
 
 from utils.database import async_session_factory
 from . import User
@@ -23,3 +24,29 @@ class UserHappyBirthday(Base):
             await session.commit()
             await session.refresh(user_hbd)
             return user_hbd.id
+
+    @staticmethod
+    async def get_count_by_user(user_id: str) -> int:
+        async with async_session_factory() as session:
+            q = (
+                select(func.count(UserHappyBirthday.user_id))
+                .select_from(UserHappyBirthday)
+                .where(UserHappyBirthday.user_id == user_id)
+            )
+            result = await session.execute(q)
+            return result.scalar()
+
+    @staticmethod
+    async def get_all_hbd_by_user(
+        user_id: str, page_num: int = 0
+    ) -> Optional[List["UserHappyBirthday"]]:
+        async with async_session_factory() as session:
+            q = (
+                select(UserHappyBirthday)
+                .where(UserHappyBirthday.user_id == user_id)
+                .order_by(UserHappyBirthday.created_at)
+                .limit(5)
+                .offset(page_num)
+            )
+            result = await session.execute(q)
+            return result.scalars().all()

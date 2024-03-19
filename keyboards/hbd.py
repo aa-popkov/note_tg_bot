@@ -9,6 +9,7 @@ from aiogram.types import (
 )
 from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder
 
+from models.callback.hbd import HbdCallback, HbdNavigation
 from utils.kb_data import HbdMenu
 from models.callback.calendar import CalendarCallback, CalendarNavigation, CalendarObj
 
@@ -136,7 +137,7 @@ def get_hbd_day_calendar(
                 year=cb.year,
                 month=cb.month,
                 obj=CalendarObj.day,
-                navigation=CalendarNavigation.back
+                navigation=CalendarNavigation.back,
             ).pack(),
         )
     )
@@ -144,9 +145,9 @@ def get_hbd_day_calendar(
         InlineKeyboardButton(
             text=f"{months[cb.month]} {cb.year}",
             callback_data=CalendarCallback(
-                    year=cb.year,
-                    obj=CalendarObj.year,
-                ).pack(),
+                year=cb.year,
+                obj=CalendarObj.year,
+            ).pack(),
         )
     )
     builder.add(
@@ -156,7 +157,7 @@ def get_hbd_day_calendar(
                 year=cb.year,
                 month=cb.month,
                 obj=CalendarObj.day,
-                navigation=CalendarNavigation.forward
+                navigation=CalendarNavigation.forward,
             ).pack(),
         )
     )
@@ -164,26 +165,60 @@ def get_hbd_day_calendar(
     days = monthcalendar(cb.year, cb.month + 1)
 
     for weekday in weekdays:
-        builder.add(
-            InlineKeyboardButton(
-                text=weekday,
-                callback_data=" "
-            )
-        )
+        builder.add(InlineKeyboardButton(text=weekday, callback_data=" "))
 
     for week in days:
         for day in week:
             builder.add(
                 InlineKeyboardButton(
                     text=str(day) if day != 0 else " ",
-                    callback_data=CalendarCallback(
-                        year=cb.year,
-                        month=cb.month,
-                        day=day,
-                        obj=CalendarObj.day,
-                    ).pack() if day != 0 else " ",
+                    callback_data=(
+                        CalendarCallback(
+                            year=cb.year,
+                            month=cb.month,
+                            day=day,
+                            obj=CalendarObj.day,
+                        ).pack()
+                        if day != 0
+                        else " "
+                    ),
                 )
             )
 
     builder.adjust(3, 7)
+    return builder.as_markup()
+
+
+def get_hbd_in_msg_kb(cb: HbdCallback) -> InlineKeyboardMarkup:
+    builder = InlineKeyboardBuilder()
+    if cb.current_page+1 != 1:
+        builder.add(
+            InlineKeyboardButton(
+                text="<<",
+                callback_data=HbdCallback(
+                    current_page=cb.current_page - 1,
+                    max_page=cb.max_page,
+                    navigation=HbdNavigation.back,
+                ).pack(),
+            )
+        )
+
+    builder.add(
+        InlineKeyboardButton(
+            text=f"{cb.current_page+1}/{cb.max_page}", callback_data=" "
+        )
+    )
+
+    if cb.current_page+1 != cb.max_page:
+        builder.add(
+            InlineKeyboardButton(
+                text=">>",
+                callback_data=HbdCallback(
+                    current_page=cb.current_page + 1,
+                    max_page=cb.max_page,
+                    navigation=HbdNavigation.back,
+                ).pack(),
+            )
+        )
+
     return builder.as_markup()

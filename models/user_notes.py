@@ -44,7 +44,7 @@ class UserNote(Base):
             return result.scalar()
 
     @staticmethod
-    async def get_all_notes(
+    async def get_all_notes_by_user(
         user_id: str, page_num: int = 0
     ) -> Optional[List["UserNote"]]:
         async with async_session_factory() as session:

@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import select
@@ -31,3 +31,11 @@ class User(Base):
             result = await session.execute(query)
             user = result.scalar_one_or_none()
             return user
+
+    @staticmethod
+    async def get_all_users() -> List["User"]:
+        async with async_session_factory() as session:
+            query = select(User).where(User.tg_id is not None)
+            result = await session.execute(query)
+            users = result.scalars().all()
+            return users
