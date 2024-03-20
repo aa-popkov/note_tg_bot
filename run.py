@@ -27,7 +27,9 @@ if __name__ == "__main__":
         style="{",
         handlers=[
             RotatingFileHandler(
-                "./data/logs/bot.log", maxBytes=10 * 1024, backupCount=5
+                filename="./data/logs/bot.log",
+                maxBytes=1 * 1024 * 1024 * 5,  # 5 MB
+                backupCount=5,
             )
         ],
         level=logging.DEBUG,

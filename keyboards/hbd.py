@@ -1,5 +1,6 @@
 from datetime import date
 from calendar import monthcalendar
+from typing import List
 
 from aiogram.types import (
     ReplyKeyboardMarkup,
@@ -9,7 +10,14 @@ from aiogram.types import (
 )
 from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder
 
-from models.callback.hbd import HbdCallback, HbdNavigation
+from models import UserHappyBirthday
+from models.callback.hbd import (
+    HbdCallback,
+    HbdNavigation,
+    HbdType,
+    HbdDeleteCallback,
+    HbdAction,
+)
 from utils.kb_data import HbdMenu
 from models.callback.calendar import CalendarCallback, CalendarNavigation, CalendarObj
 
@@ -191,7 +199,7 @@ def get_hbd_day_calendar(
 
 def get_hbd_in_msg_kb(cb: HbdCallback) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
-    if cb.current_page+1 != 1:
+    if cb.current_page + 1 != 1:
         builder.add(
             InlineKeyboardButton(
                 text="<<",
@@ -199,6 +207,7 @@ def get_hbd_in_msg_kb(cb: HbdCallback) -> InlineKeyboardMarkup:
                     current_page=cb.current_page - 1,
                     max_page=cb.max_page,
                     navigation=HbdNavigation.back,
+                    hbd_type=HbdType.show_in_msg,
                 ).pack(),
             )
         )
@@ -209,7 +218,7 @@ def get_hbd_in_msg_kb(cb: HbdCallback) -> InlineKeyboardMarkup:
         )
     )
 
-    if cb.current_page+1 != cb.max_page:
+    if cb.current_page + 1 != cb.max_page:
         builder.add(
             InlineKeyboardButton(
                 text=">>",
@@ -217,8 +226,75 @@ def get_hbd_in_msg_kb(cb: HbdCallback) -> InlineKeyboardMarkup:
                     current_page=cb.current_page + 1,
                     max_page=cb.max_page,
                     navigation=HbdNavigation.back,
+                    hbd_type=HbdType.show_in_msg,
                 ).pack(),
             )
         )
 
+    return builder.as_markup()
+
+
+def get_hbd_edit_list_kb(
+    cb: HbdCallback, hbds: List[UserHappyBirthday]
+) -> InlineKeyboardMarkup:
+    builder = InlineKeyboardBuilder()
+
+    for hbd in hbds:
+        builder.add(
+            InlineKeyboardButton(
+                text=f"{hbd.person_birthdate.strftime('%d.%m.%Y')} | {hbd.person_name}",
+                callback_data=HbdDeleteCallback(id=hbd.id).pack(),
+            )
+        )
+
+    builder.adjust(1)
+
+    nav_button = []
+
+    if cb.current_page + 1 != 1:
+        nav_button.append(
+            InlineKeyboardButton(
+                text="<<",
+                callback_data=HbdCallback(
+                    current_page=cb.current_page - 1,
+                    max_page=cb.max_page,
+                    navigation=HbdNavigation.back,
+                    hbd_type=HbdType.edit_msg,
+                ).pack(),
+            )
+        )
+
+    nav_button.append(
+        InlineKeyboardButton(
+            text=f"{cb.current_page+1}/{cb.max_page}", callback_data=" "
+        )
+    )
+
+    if cb.current_page + 1 != cb.max_page:
+        nav_button.append(
+            InlineKeyboardButton(
+                text=">>",
+                callback_data=HbdCallback(
+                    current_page=cb.current_page + 1,
+                    max_page=cb.max_page,
+                    navigation=HbdNavigation.back,
+                    hbd_type=HbdType.edit_msg,
+                ).pack(),
+            )
+        )
+
+    builder.row(*nav_button, width=len(nav_button))
+
+    return builder.as_markup()
+
+
+def get_hbd_edit_kb(cb: HbdDeleteCallback) -> InlineKeyboardMarkup:
+    builder = InlineKeyboardBuilder()
+    builder.add(
+        InlineKeyboardButton(
+            text="❌ Удалить",
+            callback_data=HbdDeleteCallback(id=cb.id, action=HbdAction.delete).pack(),
+        ),
+    )
+    builder.adjust(1)
     return builder.as_markup()

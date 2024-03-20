@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Optional, List
 
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import select, ForeignKey, String, func
+from sqlalchemy import select, ForeignKey, String, func, delete
 
 from utils.database import async_session_factory
 from . import User
@@ -24,6 +24,22 @@ class UserHappyBirthday(Base):
             await session.commit()
             await session.refresh(user_hbd)
             return user_hbd.id
+
+    @staticmethod
+    async def delete_hbd(hbd_id: int) -> bool:
+        async with async_session_factory() as session:
+            q = delete(UserHappyBirthday).where(UserHappyBirthday.id == hbd_id)
+            await session.execute(q)
+            await session.flush()
+            await session.commit()
+            return True
+
+    @staticmethod
+    async def get_hbd_by_id(hbd_id: int) -> Optional["UserHappyBirthday"]:
+        async with async_session_factory() as session:
+            q = select(UserHappyBirthday).where(UserHappyBirthday.id == hbd_id)
+            result = await session.execute(q)
+            return result.scalar_one_or_none()
 
     @staticmethod
     async def get_count_by_user(user_id: str) -> int:

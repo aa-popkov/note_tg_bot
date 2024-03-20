@@ -4,7 +4,7 @@ from aiogram.types import Message, CallbackQuery
 
 from keyboards.hbd import get_hbd_in_msg_kb
 from models import UserHappyBirthday
-from models.callback.hbd import HbdCallback, HbdNavigation
+from models.callback.hbd import HbdCallback, HbdNavigation, HbdType
 from utils import states
 from utils.kb_data import HbdMenu
 from utils.middlewares import LongTimeMiddleware
@@ -21,8 +21,10 @@ router.message.middleware(LongTimeMiddleware())
 async def get_hbd_in_msg(msg: Message):
     all_hbd_count = await UserHappyBirthday.get_count_by_user(str(msg.from_user.id))
     if all_hbd_count == 0:
-        await msg.answer("У тебя еще не заведены Дни рождения 😭\n\n"
-                         "<i>Воспользуйся клавиатурой внизу</i>")
+        await msg.answer(
+            "У тебя еще не заведены Дни рождения 😭\n\n"
+            "<i>Воспользуйся клавиатурой внизу</i>"
+        )
         return
     all_hbd = await UserHappyBirthday.get_all_hbd_by_user(str(msg.from_user.id))
     hb_cb = HbdCallback(
@@ -44,8 +46,8 @@ async def get_hbd_in_msg(msg: Message):
     )
 
 
-@router.callback_query(HbdCallback.filter())
-async def get_hbd_forward_callback(callback: CallbackQuery):
+@router.callback_query(HbdCallback.filter(F.hbd_type == HbdType.show_in_msg))
+async def get_hbd_nav_callback(callback: CallbackQuery):
     cb_data = HbdCallback.unpack(callback.data)
     all_hbd_count = await UserHappyBirthday.get_count_by_user(
         str(callback.from_user.id)
@@ -65,6 +67,5 @@ async def get_hbd_forward_callback(callback: CallbackQuery):
         )
 
     await callback.message.edit_text(
-        text=msg_text,
-        reply_markup=get_hbd_in_msg_kb(cb_data)
+        text=msg_text, reply_markup=get_hbd_in_msg_kb(cb_data)
     )
