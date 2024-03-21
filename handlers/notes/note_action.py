@@ -4,7 +4,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message
 
 from keyboards.notes import get_my_notes_kb, get_edit_note_kb, get_main_notes_kb
-from models.callback.note import NoteActionCallback, NoteAction, NotesCallback
+from schemas.callback.note import NoteActionCallback, NoteAction, NotesCallback
 from models.user_notes import UserNote
 from utils import states
 from utils.states import NotesState
@@ -26,7 +26,7 @@ async def note_action_delete_callback(callback: CallbackQuery, state: FSMContext
         previous_page=0,
         max_page=(notes_count // 5) + 1,
     )
-    notes = await UserNote.get_all_notes(str(callback.from_user.id))
+    notes = await UserNote.get_all_notes_by_user(str(callback.from_user.id))
     try:
         await callback.message.delete()
     except Exception as e:

@@ -1,4 +1,5 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from pathlib import Path
 
 
 class Config(BaseSettings):
@@ -19,6 +20,14 @@ class Config(BaseSettings):
     @property
     def connection_string_asyncpg(self):
         return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_DATABASE}"
+
+    @property
+    def connection_string_aiosqlite(self):
+        return f"sqlite+aiosqlite:///{str(Path(__file__).resolve().parent.parent / 'data' / self.DB_DATABASE)}.db"
+
+    @property
+    def connection_string_sqlite(self):
+        return f"sqlite:///{str(Path(__file__).resolve().parent.parent / 'data' / self.DB_DATABASE)}.db"
 
     @property
     def connection_string_psycopg(self):

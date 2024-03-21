@@ -1,7 +1,4 @@
-/docker/data/
-/data/db/
-/data/redis/
-/data/logs/*
+/data/
 .env
 .venv
 .DS_Store

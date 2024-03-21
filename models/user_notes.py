@@ -44,7 +44,7 @@ class UserNote(Base):
             return result.scalar()
 
     @staticmethod
-    async def get_all_notes(
+    async def get_all_notes_by_user(
         user_id: str, page_num: int = 0
     ) -> Optional[List["UserNote"]]:
         async with async_session_factory() as session:
@@ -52,8 +52,8 @@ class UserNote(Base):
                 select(UserNote)
                 .where(UserNote.user_id == user_id)
                 .order_by(UserNote.created_at)
+                .limit(5)
                 .offset(page_num)
-                .fetch(5)
             )
             result = await session.execute(q)
             return result.scalars().all()

@@ -7,7 +7,7 @@ from keyboards.notes import get_my_notes_kb, get_my_note_kb
 from utils import states
 from utils.kb_data import NotesMenu
 from models.user_notes import UserNote
-from models.callback.note import (
+from schemas.callback.note import (
     NotesCallback,
     NoteNavigation,
     NoteCallback,
@@ -30,7 +30,7 @@ async def get_notes(msg: Message, state: FSMContext):
         previous_page=0,
         max_page=((notes_count - 1) // 5) + 1,
     )
-    notes = await UserNote.get_all_notes(str(msg.from_user.id))
+    notes = await UserNote.get_all_notes_by_user(str(msg.from_user.id))
     await msg.answer(
         text="Твои заметки\n" "Для навигации используй кнопки",
         reply_markup=get_my_notes_kb(notes, callback_counter),
@@ -48,7 +48,7 @@ async def note_callback_forward(callback: CallbackQuery, state: FSMContext):
         notes_count=notes_count,
     )
 
-    notes = await UserNote.get_all_notes(
+    notes = await UserNote.get_all_notes_by_user(
         str(callback.from_user.id), (note_count.current_page - 1) * 5
     )
 

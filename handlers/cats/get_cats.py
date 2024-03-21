@@ -53,12 +53,7 @@ async def back_to_main_menu(message: Message, state: FSMContext):
     await main_menu(message, state)
 
 
-@router.message(StateFilter(states.MainState.wait_operation))
-async def wait_operation(message: Message, state: FSMContext):
-    await message.answer("<b>Необходимо дождаться предыдущего котика!</b>")
 
-
-# ! THIS ROUTE MUST BE LAST IN THIS FILE !
 @router.message(
     StateFilter(states.MainState.cats),
     F.content_type == "text",

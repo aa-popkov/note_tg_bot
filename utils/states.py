@@ -12,6 +12,7 @@ class MainState(StatesGroup):
     menu = State()
     notes = State()
     cats = State()
+    hbd = State()
     wait_operation = State()
 
 
@@ -19,3 +20,7 @@ class NotesState(StatesGroup):
     create_note = State()
     my_note = State()
     edit_note = State()
+
+
+class HbdState(StatesGroup):
+    add_note = State()
