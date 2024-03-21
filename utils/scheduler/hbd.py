@@ -50,6 +50,6 @@ async def hbd_notify():
                     chat_id=user.tg_id,
                     text=f"⏰ Напоминаю, <b>{notify_text}</b>\n"
                     f"🎂 День рождение у <b>{hbd.person_name}</b>\n"
-                    f"📅 Дата: <b>{hbd.person_birthdate}</b>\n"
+                    f"📅 Дата: <b>{hbd.person_birthdate.strftime('%d.%m.%Y')}</b>\n"
                     f"🎈 Исполняется: <b>{years_num} {years_text}</b>\n",
                 )

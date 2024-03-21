@@ -10,18 +10,32 @@
         html, body {
             background-color: #353b3b;
         }
+
+        h3 {
+            color: #ffffff;
+            font-family: -apple-system, Arial, Helvetica, sans-serif;
+        }
+
+        div {
+            width: 100%;
+            max-width: 100%;
+        }
+
         table {
             border-collapse: collapse;
             color: #ffffff;
             width: 100%;
         }
+
         tr {
             border: 1px solid #ddd;
             padding: 10px 20px;
         }
+
         th {
             background-color: #3d4b4b;
         }
+
         td, th {
             border: 1px solid #455959;
             padding: 10px 20px;
@@ -29,30 +43,59 @@
             font-size: 16px;
             font-family: -apple-system, Arial, Helvetica, sans-serif;
         }
+
         tr:nth-child(even) {
             background-color: #2a3a3a;
         }
+
         tr:nth-child(odd) {
             background-color: #353b3b;
         }
-        </style>
+    </style>
 </head>
 <body>
-<table>
-    <thead>
-    <tr>
-        <th>Name</th>
-        <th>Date</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for hbd in content %}
-    <tr>
-        <td>{{ hbd.person_name }}</td>
-        <td>{{ hbd.person_birthdate.strftime('%d.%m.%Y') }}</td>
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
+<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; width: 100%;">
+    <div>
+        <h3>Сводка по месяцам</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>Month</th>
+                <th>Count</th>
+                <th>Graph</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for hbd in content.bar_chart %}
+            <tr>
+                <td>{{ hbd.month }}</td>
+                <td>{{ hbd.count }}</td>
+                <td>{{ hbd.bar_str }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <h3>Общий список</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for hbd in content.hbds %}
+            <tr>
+                <td>{{ hbd.person_name }}</td>
+                <td>{{ hbd.person_birthdate.strftime('%d.%m.%Y') }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
 </body>
 </html>

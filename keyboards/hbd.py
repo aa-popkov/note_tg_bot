@@ -11,7 +11,7 @@ from aiogram.types import (
 from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder
 
 from models import UserHappyBirthday
-from models.callback.hbd import (
+from schemas.callback.hbd import (
     HbdCallback,
     HbdNavigation,
     HbdType,
@@ -19,7 +19,7 @@ from models.callback.hbd import (
     HbdAction,
 )
 from utils.kb_data import HbdMenu
-from models.callback.calendar import CalendarCallback, CalendarNavigation, CalendarObj
+from schemas.callback.calendar import CalendarCallback, CalendarNavigation, CalendarObj
 
 
 months = [

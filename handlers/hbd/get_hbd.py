@@ -7,7 +7,8 @@ from aiogram.types import Message, CallbackQuery, BufferedInputFile
 
 from keyboards.hbd import get_hbd_in_msg_kb
 from models import UserHappyBirthday
-from models.callback.hbd import HbdCallback, HbdNavigation, HbdType
+from schemas.callback.hbd import HbdCallback, HbdType
+from schemas.hbd import HbdFile
 from utils import states
 from utils.kb_data import HbdMenu
 from utils.middlewares import LongTimeMiddleware
@@ -102,7 +103,11 @@ async def get_hbd_in_file(msg: Message, state: FSMContext):
             )
             all_hbd += hbds
 
-        hbd_html: str = create_render_page("hbd", all_hbd)
+        hbd_file = HbdFile(
+            hbds=all_hbd,
+            bar_chart=HbdFile.gen_bar_chart(all_hbd)
+        )
+        hbd_html: str = create_render_page("hbd", hbd_file)
         hbd_bytes = hbd_html.encode("utf-8")
         hbd_file = BufferedInputFile(file=hbd_bytes, filename="hbd.html")
 

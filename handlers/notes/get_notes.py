@@ -7,7 +7,7 @@ from keyboards.notes import get_my_notes_kb, get_my_note_kb
 from utils import states
 from utils.kb_data import NotesMenu
 from models.user_notes import UserNote
-from models.callback.note import (
+from schemas.callback.note import (
     NotesCallback,
     NoteNavigation,
     NoteCallback,

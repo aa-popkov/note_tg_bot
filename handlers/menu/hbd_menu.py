@@ -3,9 +3,10 @@ from aiogram.filters import StateFilter, Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
+from handlers.menu.main_menu import main_menu
 from utils import states
 from keyboards.hbd import get_hbd_kb
-from utils.kb_data import MainMenu
+from utils.kb_data import MainMenu, HbdMenu
 
 router = Router(name=__name__)
 
@@ -29,3 +30,8 @@ async def hbd_menu(msg: Message, state: FSMContext):
         reply_markup=get_hbd_kb(),
     )
     await state.set_state(states.MainState.hbd)
+
+
+@router.message(StateFilter(states.MainState.hbd), F.text == HbdMenu().back_to_menu)
+async def hbd_back_to_menu(msg: Message, state: FSMContext):
+    await main_menu(msg, state)

@@ -4,7 +4,7 @@ from aiogram.types import Message, CallbackQuery
 
 from keyboards.hbd import get_hbd_edit_list_kb, get_hbd_edit_kb, get_hbd_kb
 from models import UserHappyBirthday
-from models.callback.hbd import HbdCallback, HbdType, HbdDeleteCallback, HbdAction
+from schemas.callback.hbd import HbdCallback, HbdType, HbdDeleteCallback, HbdAction
 from utils import states
 from utils.kb_data import HbdMenu
 

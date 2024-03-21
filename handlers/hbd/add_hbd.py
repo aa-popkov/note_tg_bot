@@ -6,7 +6,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, ReplyKeyboardRemove, CallbackQuery
 
 from models import UserHappyBirthday
-from models.callback.calendar import CalendarCallback, CalendarNavigation, CalendarObj
+from schemas.callback.calendar import CalendarCallback, CalendarNavigation, CalendarObj
 from utils import states
 from keyboards.hbd import (
     get_hbd_kb,
@@ -32,8 +32,9 @@ async def add_hbd(msg: Message, state: FSMContext):
 @router.message(StateFilter(states.HbdState.add_note), F.content_type == "text")
 async def add_hbd_get_name(msg: Message, state: FSMContext):
     if len(msg.text.strip()) > 40:
-        await msg.answer("<b>Текст не должен превышать 40 символов!</b>\n"
-                         "<i>Попробуй еще раз</i>")
+        await msg.answer(
+            "<b>Текст не должен превышать 40 символов!</b>\n" "<i>Попробуй еще раз</i>"
+        )
         return
     await state.set_data({"hbd_name": msg.text.strip()})
     await msg.answer(
@@ -154,8 +155,11 @@ async def hbd_month_callback(callback: CallbackQuery):
 )
 async def hbd_month_back_callback(callback: CallbackQuery):
     cb_data = CalendarCallback.unpack(callback.data)
-    cb_data.month = cb_data.month - 1 if cb_data.month > 0 else 11
-    cb_data.year = cb_data.year if cb_data.month > 0 else cb_data.year - 1
+    if cb_data.month > 0:
+        cb_data.month -= 1
+    else:
+        cb_data.month = 11
+        cb_data.year -= 1
     await callback.message.edit_reply_markup(reply_markup=get_hbd_day_calendar(cb_data))
     await callback.answer("")
 
@@ -168,8 +172,11 @@ async def hbd_month_back_callback(callback: CallbackQuery):
 )
 async def hbd_month_forward_callback(callback: CallbackQuery):
     cb_data = CalendarCallback.unpack(callback.data)
-    cb_data.month = cb_data.month + 1 if cb_data.month < 11 else 0
-    cb_data.year = cb_data.year if cb_data.month < 11 else cb_data.year + 1
+    if cb_data.month < 11:
+        cb_data.month += 1
+    else:
+        cb_data.month = 0
+        cb_data.year += 1
     await callback.message.edit_reply_markup(reply_markup=get_hbd_day_calendar(cb_data))
     await callback.answer("")
 
@@ -182,19 +189,21 @@ async def hbd_month_forward_callback(callback: CallbackQuery):
 )
 async def hbd_select_date_callback(callback: CallbackQuery, state: FSMContext):
     cb_data = CalendarCallback.unpack(callback.data)
-    hbd_date = datetime.date(cb_data.year, cb_data.month+1, cb_data.day)
+    hbd_date = datetime.date(cb_data.year, cb_data.month + 1, cb_data.day)
     hbd_name = await state.get_data()
-    hbd_id = await UserHappyBirthday.add_hbd(UserHappyBirthday(
-        person_name=hbd_name["hbd_name"],
-        person_birthdate=hbd_date,
-        user_id=str(callback.from_user.id)
-    ))
+    hbd_id = await UserHappyBirthday.add_hbd(
+        UserHappyBirthday(
+            person_name=hbd_name["hbd_name"],
+            person_birthdate=hbd_date,
+            user_id=str(callback.from_user.id),
+        )
+    )
 
     await callback.message.edit_text(
         text=f"День рождения успешно добавлен:\n\n"
-             f"Имя: {hbd_name['hbd_name']}\n"
-             f"Дата: {hbd_date.strftime('%d.%m.%Y')}\n"
-             f"ID: {hbd_id}",
+        f"Имя: {hbd_name['hbd_name']}\n"
+        f"Дата: {hbd_date.strftime('%d.%m.%Y')}\n"
+        f"ID: {hbd_id}",
         reply_markup=None,
     )
     await state.set_state(states.MainState.hbd)
@@ -202,5 +211,5 @@ async def hbd_select_date_callback(callback: CallbackQuery, state: FSMContext):
     await callback.bot.send_message(
         chat_id=callback.message.chat.id,
         text="Перевожу в меню Дней рождений",
-        reply_markup=get_hbd_kb()
+        reply_markup=get_hbd_kb(),
     )

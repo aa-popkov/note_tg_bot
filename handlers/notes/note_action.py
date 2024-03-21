@@ -4,7 +4,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message
 
 from keyboards.notes import get_my_notes_kb, get_edit_note_kb, get_main_notes_kb
-from models.callback.note import NoteActionCallback, NoteAction, NotesCallback
+from schemas.callback.note import NoteActionCallback, NoteAction, NotesCallback
 from models.user_notes import UserNote
 from utils import states
 from utils.states import NotesState

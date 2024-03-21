@@ -9,7 +9,7 @@ from aiogram.types import (
 from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder
 
 from models.user_notes import UserNote
-from models.callback.note import (
+from schemas.callback.note import (
     NotesCallback,
     NoteNavigation,
     NoteCallback,
