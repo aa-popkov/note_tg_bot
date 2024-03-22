@@ -3,7 +3,7 @@
 echo "Start up!"
 
 echo "Start Docker Containers"
-docker-compose up -d
+docker compose up -d
 
 sed -i.bak 's/from models/#from models/g' ./utils/scheduler/hbd.py
 ./.venv/bin/python3 -m alembic upgrade head
