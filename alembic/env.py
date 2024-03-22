@@ -31,7 +31,7 @@ target_metadata = Base.metadata
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
-config.set_main_option("sqlalchemy.url", app_config.connection_string_aiosqlite)
+config.set_main_option("sqlalchemy.url", app_config.connection_string_async)
 
 
 def include_object(object, name, type_, reflected, compare_to):
