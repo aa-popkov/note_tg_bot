@@ -44,9 +44,10 @@ def get_my_notes_kb(
 
     notes_rows = builder.row(width=1)
     for note in notes:
+        note_title = f"📷 {note.title}" if note.file_id else note.title
         notes_rows.add(
             InlineKeyboardButton(
-                text=note.title, callback_data=NoteCallback(id=note.id).pack()
+                text=note_title, callback_data=NoteCallback(id=note.id).pack()
             )
         )
     builder.adjust(1)
