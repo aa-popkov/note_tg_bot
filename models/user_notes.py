@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from sqlalchemy import ForeignKey, String, select, func, text, delete, update
+from sqlalchemy import ForeignKey, String, select, func, delete, update
 from sqlalchemy.orm import Mapped, mapped_column
 
 from utils.database import async_session_factory
@@ -14,6 +14,7 @@ class UserNote(Base):
     user_id: Mapped[str] = mapped_column(ForeignKey(User.tg_id))
     created_at: Mapped[created_at]
     updated_at: Mapped[updated_at]
+    file_id: Mapped[Optional[str]] = None
 
     @staticmethod
     def convert_title(msg_text: str):
@@ -82,7 +83,7 @@ class UserNote(Base):
             q = (
                 update(UserNote)
                 .where(UserNote.id == note.id)
-                .values(dict(text=note.text, title=note.title))
+                .values(dict(text=note.text, title=note.title, file_id=note.file_id))
             )
             await session.execute(q)
             await session.flush()

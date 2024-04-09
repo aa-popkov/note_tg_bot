@@ -63,6 +63,15 @@ async def note_callback(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
     note_id = NoteCallback.unpack(callback.data).id
     note = await UserNote.get_note_by_id(str(callback.from_user.id), note_id)
+    if note.file_id:
+        await callback.message.edit_reply_markup(reply_markup=None)
+        await callback.message.bot.send_photo(
+            chat_id=callback.from_user.id,
+            photo=str(note.file_id),
+            caption=note.text,
+            reply_markup=get_my_note_kb(note_id)
+        )
+        return
     await callback.message.edit_text(
         text=f"Твоя заметка: <b>{note.title}</b>" f"\n\n" f"{note.text}",
         reply_markup=get_my_note_kb(note_id),
