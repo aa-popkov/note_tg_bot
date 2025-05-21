@@ -7,6 +7,10 @@ services:
     hostname: tg-note-bot
     env_file:
       - .env
+    volumes:
+      - ./data/logs:/app/data/logs
+      - ./data/db:/app/data/db
+      - ./data/${DB_DATABASE}.db:/app/data/${DB_DATABASE}.db
     restart: unless-stopped
 #  postgres:
 #    container_name: db-postgres
