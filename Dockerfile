@@ -10,4 +10,4 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-CMD ["./startup.sh"]
+ENTRYPOINT ["bash", "/app/startup.sh"]
