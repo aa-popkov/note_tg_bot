@@ -5,6 +5,6 @@ from redis.asyncio import client
 
 from config import config
 
-redis = client.Redis(password=config.REDIS_PASSWORD)
+redis = client.Redis(host=config.REDIS_HOST, password=config.REDIS_PASSWORD)
 dp = Dispatcher(storage=RedisStorage(redis))
 bot = Bot(config.TG_BOT_API_KEY, parse_mode=ParseMode.HTML)

@@ -16,6 +16,7 @@ class Config(BaseSettings):
     DB_ECHO: bool
 
     REDIS_PASSWORD: str
+    REDIS_HOST: str = "tg-note-bot-cache-redis"
 
     CAT_API_KEY: str
 

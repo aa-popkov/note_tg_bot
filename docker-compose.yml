@@ -1,5 +1,13 @@
 version: "3.9"
 services:
+  bot:
+    build:
+      context: .
+    container_name: tg-note-bot
+    hostname: tg-note-bot
+    env_file:
+      - .env
+    restart: unless-stopped
 #  postgres:
 #    container_name: db-postgres
 #    image: postgres:14.8-alpine3.18
@@ -27,14 +35,14 @@ services:
 #          cpus: "1"
 #          memory: 4G
   redis:
-    container_name: cache-redis
+    container_name: tg-note-bot-cache-redis
+    hostname: tg-note-bot-cache-redis
     image: redis/redis-stack:7.2.0-v4
     volumes:
       - ./data/redis:/data
       - ./config/redis.conf:/redis-stack.conf
+    env_file:
+      - .env
     environment:
       - REDIS_ARGS=--requirepass ${REDIS_PASSWORD}
-    ports:
-      - "6379:6379"
-      - "13333:8001"
     restart: unless-stopped
